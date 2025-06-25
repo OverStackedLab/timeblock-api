@@ -1,5 +1,18 @@
 import { ApolloServer } from "@apollo/server";
-import { startStandaloneServer } from "@apollo/server/standalone";
+import { expressMiddleware } from "@apollo/server/express4";
+import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import { ApolloServerPluginLandingPageLocalDefault } from "@apollo/server/plugin/landingPage/default";
+import express, { json } from "express";
+import http from "http";
+import { firebaseDataSource } from "./datasources/firebaseDataSource";
+
+const PORT = process.env.PORT || 4000;
+
+export interface Context {
+  loaders: {
+    blocksLoader: ReturnType<typeof firebaseDataSource>;
+  };
+}
 
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
@@ -63,17 +76,39 @@ const resolvers = {
   },
 };
 
+// Apollo Server Setup:
+// 1. creates an Express app
+// 2. installs your ApolloServer instance as middleware
+// 3. prepares your app to handle incoming requests
+const app = express();
+const httpServer = http.createServer(app);
+
 // The ApolloServer constructor requires two parameters: your schema
 // definition and your set of resolvers.
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  plugins: [
+    ApolloServerPluginDrainHttpServer({ httpServer }),
+    ApolloServerPluginLandingPageLocalDefault(),
+  ],
 });
 
-// Passing an ApolloServer instance to the `startStandaloneServer` function:
-//  1. creates an Express app
-//  2. installs your ApolloServer instance as middleware
-//  3. prepares your app to handle incoming requests
-const { url } = await startStandaloneServer(server, { listen: { port: 4000 } });
+app.use(json());
 
-console.log(`🚀 Server listening at: ${url}`);
+(async () => {
+  await server.start();
+  app.use(
+    expressMiddleware(server, {
+      context: async (): Promise<Context> => ({
+        loaders: {
+          blocksLoader: firebaseDataSource(),
+        },
+      }),
+    })
+  );
+  await new Promise<void>((resolve) =>
+    httpServer.listen({ port: PORT }, resolve)
+  );
+  console.log(`🚀 Server listening at http://localhost:${PORT}`);
+})();

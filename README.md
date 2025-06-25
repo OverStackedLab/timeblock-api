@@ -86,3 +86,5 @@ timeblock-api/
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+https://chatgpt.com/canvas/shared/6808944de5548191a5da1955ae3b2b10
