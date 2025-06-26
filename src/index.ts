@@ -1,11 +1,10 @@
 import { ApolloServer } from "@apollo/server";
-import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { expressMiddleware } from "@as-integrations/express4";
 import cors from "cors";
 import express from "express";
+import * as functions from "firebase-functions";
 import { readFileSync } from "fs";
 import { gql } from "graphql-tag";
-import http from "http";
 import path from "path";
 import { ListingAPI } from "./datasources/listing-api";
 import { resolvers } from "./resolvers";
@@ -24,28 +23,52 @@ interface ContextValue {
 }
 
 const app = express();
-const httpServer = http.createServer(app);
+
 const server = new ApolloServer<ContextValue>({
   typeDefs,
   resolvers,
-  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  // Remove drainHttpServer plugin for Firebase Functions
+  introspection: true, // Enable for development
+  csrfPrevention: false, // Disable CSRF for Firebase Functions
 });
-await server.start();
-app.use(
-  "/graphql",
-  cors<cors.CorsRequest>(),
-  express.json(),
-  expressMiddleware(server, {
-    context: async ({ req }): Promise<ContextValue> => ({
-      token: req.headers.token as string,
-      dataSources: {
-        ListingAPI: new ListingAPI(),
-      },
-    }),
-  })
-);
 
-await new Promise<void>((resolve) =>
-  httpServer.listen({ port: 4000 }, resolve)
-);
-console.log(`🚀 Server ready at http://localhost:4000/graphql`);
+async function startServer() {
+  await server.start();
+
+  app.use(
+    "/graphql",
+    cors({
+      origin: true, // Allow all origins for Firebase Functions
+      credentials: true,
+    }),
+    express.json(),
+    expressMiddleware(server, {
+      context: async ({ req }): Promise<ContextValue> => ({
+        token: req.headers.authorization || (req.headers.token as string),
+        dataSources: {
+          ListingAPI: new ListingAPI(),
+        },
+      }),
+    })
+  );
+
+  return app;
+}
+
+// For local development
+if (process.env.NODE_ENV !== "production") {
+  startServer()
+    .then((app) => {
+      const port = process.env.PORT || 4000;
+      app.listen(port, () => {
+        console.log(`🚀 Server ready at http://localhost:${port}/graphql`);
+      });
+    })
+    .catch(console.error);
+}
+
+// Firebase Function export
+export const api = functions.https.onRequest(async (req, res) => {
+  const app = await startServer();
+  app(req, res);
+});
