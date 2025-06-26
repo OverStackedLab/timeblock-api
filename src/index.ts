@@ -55,8 +55,13 @@ async function startServer() {
   return app;
 }
 
-// For local development
-if (process.env.NODE_ENV !== "production") {
+// Only start local server when running directly (not as Firebase Function)
+const isFirebaseEnvironment =
+  process.env.FUNCTIONS_EMULATOR || process.env.FIREBASE_CONFIG;
+const isLocalDev =
+  process.env.NODE_ENV !== "production" && !isFirebaseEnvironment;
+
+if (isLocalDev && require.main === module) {
   startServer()
     .then((app) => {
       const port = process.env.PORT || 4000;
