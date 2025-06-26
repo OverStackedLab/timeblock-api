@@ -1,27 +1,58 @@
 {
-  "name": "timeblock-api",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "compile": "tsc",
-    "start": "npm run compile && node ./dist/index.js"
+  "name": "intro-to-graphql-with-typescript",
+  "private": true,
+  "description": "The starter code for the Odyssey Intro to GraphQL with TypeScript course",
+  "version": "0.0.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/apollographql-education/intro-typescript"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "engines": {
+    "node": ">=18.0"
+  },
   "type": "module",
-  "devDependencies": {
-    "@types/node": "^22.13.10",
-    "typescript": "^5.8.2"
+  "scripts": {
+    "compile": "tsc",
+    "dev": "concurrently \"ts-node-dev --esm --respawn --watch ./**/*.graphql ./src/index.ts\" \"npm run generate --watch\"",
+    "start": "npm run compile && node --experimental-specifier-resolution=node ./dist/index.js",
+    "test": "jest",
+    "generate": "graphql-codegen --watch \"src/schema.graphql\""
   },
   "dependencies": {
-    "@apollo/server": "^4.11.3",
-    "@apollo/subgraph": "^2.10.0",
-    "dataloader": "^2.2.3",
-    "firebase-admin": "^13.4.0",
-    "graphql": "^16.10.0",
+    "@apollo/datasource-rest": "^6.3.0",
+    "@apollo/server": "^4.10.4",
+    "@parcel/watcher": "^2.4.0",
+    "graphql": "^16.9.0",
     "graphql-tag": "^2.12.6"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/typescript": "^4.0.7",
+    "@graphql-codegen/typescript-resolvers": "^4.1.0",
+    "@types/jest": "^29.0.3",
+    "@types/node": "^20.0.0",
+    "concurrently": "^8.2.2",
+    "jest": "^29.0.3",
+    "nodemon": "^3.0.0",
+    "ts-jest": "^29.0.2",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.0.0"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "roots": [
+      "src"
+    ],
+    "globals": {
+      "ts-jest": {
+        "testRegext": "/__tests__/.*.test.ts",
+        "verbose": true
+      }
+    }
   }
 }

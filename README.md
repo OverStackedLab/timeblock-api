@@ -1,90 +1,36 @@
-# TimeBlock API
+# (Odyssey Course) Intro to GraphQL with TypeScript
 
-A modern time management application API built with GraphQL, and Node.js.
+Welcome to the starter code for **Intro to GraphQL with TypeScript**. You can find the [course lessons and instructions](https://apollographql.com/tutorials/intro-typescript) on Odyssey, [Apollo](https://apollographql.com)'s learning platform.
 
-## Prerequisites
+## How to use this repo
 
-- Node.js (v18 or higher)
-- npm or yarn
-- Git
+The course will walk you step by step on what to do. This codebase is the starting point of your journey!
 
-## Getting Started
-
-### Clone the Repository
-
-```bash
-git clone https://github.com/yourusername/timeblock-api.git
-cd timeblock-api
-```
-
-### Installation
-
-Install the project dependencies:
-
-```bash
-yarn install
-```
-
-### Environment Setup
-
-1. Create a `.env` file in the root directory
-2. Copy the contents from `.env.example` to `.env`
-3. Update the environment variables with your specific configuration
-
-### Running the Application
-
-#### Development Mode
-
-```bash
-npm run dev
-# or
-yarn dev
-```
-
-The development server will start, typically on `http://localhost:3000` (or your configured port).
-
-#### Production Mode
-
-```bash
-npm run build
-npm start
-# or
-yarn build
-yarn start
-```
-
-## Project Structure
+Navigate to the root of the project directory, and run the following commands.
 
 ```
-timeblock-api/
-├── src/
-│   ├── controllers/    # Request handlers
-│   ├── models/         # Data models
-│   ├── routes/         # API routes
-│   ├── middleware/     # Custom middleware
-│   └── utils/          # Utility functions
-├── tests/              # Test files
-└── package.json        # Project dependencies and scripts
+npm install && npm run dev
 ```
 
-## Available Scripts
+The `final` branch of this repo contains the final stage of the course, with all of the steps and code completed! If you get stuck, you can refer to it and compare your code.
 
-- `npm run dev` - Start the development server
-- `npm run build` - Build the production application
-- `npm start` - Start the production server
-- `npm test` - Run tests
-- `npm run lint` - Run linting
+## Getting Help
 
-## Contributing
+This repo is _not regularly monitored_.
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+For any issues or problems concerning the course content, please refer to the [Odyssey topic in our community forums](https://community.apollographql.com/tags/c/help/6/odyssey). You can also [join the Apollo Discord](https://discord.gg/graphos).
 
-## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+# Getting Started
 
-https://chatgpt.com/canvas/shared/6808944de5548191a5da1955ae3b2b10
+### Reference Documentation
+For further reference, please consider the following sections:
+
+* [Official TypeScript documentation]([https://docs.gradle.org](https://www.typescriptlang.org/docs/))
+
+
+
+
+
+
+
