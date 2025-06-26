@@ -1,7 +1,7 @@
 {
-  "name": "intro-to-graphql-with-typescript",
+  "name": "timeblock-api",
   "private": true,
-  "description": "The starter code for the Odyssey Intro to GraphQL with TypeScript course",
+  "description": "The Timeblock API",
   "version": "0.0.0",
   "license": "MIT",
   "repository": {
@@ -13,11 +13,10 @@
   "engines": {
     "node": ">=18.0"
   },
-  "type": "module",
   "scripts": {
     "compile": "tsc",
-    "dev": "concurrently \"ts-node-dev --esm --respawn --watch ./**/*.graphql ./src/index.ts\" \"npm run generate --watch\"",
-    "start": "npm run compile && node --experimental-specifier-resolution=node ./dist/index.js",
+    "dev": "concurrently \"ts-node-dev --respawn --watch ./**/*.graphql ./src/index.ts\" \"npm run generate --watch\"",
+    "start": "npm run compile && nodemon ./dist/index.js",
     "test": "jest",
     "generate": "graphql-codegen --watch \"src/schema.graphql\""
   },
